@@ -11,12 +11,21 @@ import type {
   PersonaPreset
 } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const isHostedExternally = typeof window !== 'undefined' && (
+  window.location.hostname.includes('github.io') ||
+  window.location.hostname.includes('vercel.app') ||
+  window.location.hostname.includes('netlify.app') ||
+  window.location.hostname.includes('surge.sh')
+);
+
+const API_BASE_URL = import.meta.env.VITE_API_URL 
+  || (isHostedExternally ? 'https://creditbridge-api-2026.loca.lt/api' : '/api');
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Bypass-Tunnel-Reminder': 'true',
   },
 });
 
