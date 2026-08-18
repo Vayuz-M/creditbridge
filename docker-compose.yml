@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # Backend API & ML Service
+  # ==========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: creditbridge-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - JWT_SECRET=creditbridge-enterprise-production-key-2026-secure
+      - DATABASE_URL=sqlite:///data/creditbridge.db
+      - CORS_ORIGINS=http://localhost,http://localhost:5173,http://127.0.0.1,http://127.0.0.1:5173
+      - ENABLE_DOCS=true
+    volumes:
+      - ./backend/data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - creditbridge-net
+
+  # ==========================================
+  # Frontend Web UI (Nginx)
+  # ==========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: creditbridge-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "5173:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - creditbridge-net
+
+networks:
+  creditbridge-net:
+    driver: bridge
