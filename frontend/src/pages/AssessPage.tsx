@@ -113,7 +113,13 @@ export const AssessPage: React.FC = () => {
       navigate('/why-this-score');
     } catch (err: any) {
       console.error('Assessment failed:', err);
-      setError(err.response?.data?.detail || 'Failed to generate assessment. Please try again.');
+      const detail = err.response?.data?.detail;
+      const errorMsg = typeof detail === 'string'
+        ? detail
+        : Array.isArray(detail)
+          ? detail.map((d: any) => d.msg || JSON.stringify(d)).join(', ')
+          : 'Failed to generate assessment. Please check your inputs.';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
