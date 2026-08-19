@@ -19,7 +19,7 @@ const isHostedExternally = typeof window !== 'undefined' && (
 );
 
 const API_BASE_URL = import.meta.env.VITE_API_URL 
-  || (isHostedExternally ? 'https://creditbridge-api-2026.loca.lt/api' : '/api');
+  || (isHostedExternally ? 'https://annotation-viewer-legislation-tasks.trycloudflare.com/api' : '/api');
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

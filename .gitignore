@@ -20,6 +20,14 @@ backend/.coverage
 backend/htmlcov/
 backend/.env
 
+# Database
+backend/data/*.db
+backend/data/*.sqlite3
+
+# Logs & Binaries
+*.log
+*.exe
+
 # OS / Editor Files
 .DS_Store
 Thumbs.db
