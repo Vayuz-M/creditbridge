@@ -14,11 +14,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Create virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 COPY requirements.txt .
 
-# Build Python wheels
-RUN pip install --no-cache-dir --user -r requirements.txt \
-    && pip install --no-cache-dir --user email-validator pytest httpx
+# Build Python wheels inside /opt/venv
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
 
 # ==========================================
 # Final Runtime Stage
@@ -34,18 +38,18 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy installed python packages from builder
-COPY --from=builder /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
 ENV ENVIRONMENT=production
 
 # Copy application source code and models
 COPY . /app/
 
-# Create non-root user for security
+# Create non-root user for security and grant permissions
 RUN useradd -m -u 1000 appuser && \
     mkdir -p /app/data/models /app/data/datasets && \
-    chown -R appuser:appuser /app
+    chown -R appuser:appuser /app /opt/venv
 
 USER appuser
 
@@ -53,6 +57,6 @@ EXPOSE 8000
 
 # Container Healthcheck
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:8000/health || exit 1
+    CMD curl -f http://localhost:${PORT:-8000}/health || exit 1
 
-CMD ["sh", "-c", "python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --workers 2"]
+CMD ["sh", "-c", "python -m uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
