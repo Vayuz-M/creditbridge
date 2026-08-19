@@ -15,10 +15,18 @@ if database_url.startswith("postgres://"):
 # Handle SQLite vs PostgreSQL connection specifics
 connect_args = {"check_same_thread": False} if database_url.startswith("sqlite") else {}
 
+engine_kwargs = {
+    "connect_args": connect_args,
+    "echo": False
+}
+
+if not database_url.startswith("sqlite"):
+    engine_kwargs["pool_pre_ping"] = True
+    engine_kwargs["pool_recycle"] = 300
+
 engine = create_engine(
     database_url,
-    connect_args=connect_args,
-    echo=False
+    **engine_kwargs
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

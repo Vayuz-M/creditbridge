@@ -2,6 +2,13 @@
 # https://render.com/docs/blueprint-spec
 version: "1"
 
+databases:
+  - name: creditbridge-postgres
+    plan: free
+    region: oregon
+    databaseName: creditbridge
+    user: creditbridge_user
+
 services:
   # ==========================================
   # CreditBridge FastAPI & ML Web Service
@@ -20,7 +27,9 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: DATABASE_URL
-        value: sqlite:///data/creditbridge.db
+        fromDatabase:
+          name: creditbridge-postgres
+          property: connectionString
       - key: CORS_ORIGINS
         value: "*"
       - key: ENABLE_DOCS
