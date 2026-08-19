@@ -11,15 +11,7 @@ import type {
   PersonaPreset
 } from '../types';
 
-const isHostedExternally = typeof window !== 'undefined' && (
-  window.location.hostname.includes('github.io') ||
-  window.location.hostname.includes('vercel.app') ||
-  window.location.hostname.includes('netlify.app') ||
-  window.location.hostname.includes('surge.sh')
-);
-
-const API_BASE_URL = import.meta.env.VITE_API_URL 
-  || (isHostedExternally ? 'https://annotation-viewer-legislation-tasks.trycloudflare.com/api' : '/api');
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://creditbridge-backend-1zyq.onrender.com/api';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
