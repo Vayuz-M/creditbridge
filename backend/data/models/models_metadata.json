@@ -2,7 +2,7 @@
   "active_model": "xgboost",
   "active_model_name": "XGBoost",
   "model_version": "v1.0",
-  "training_date": "2026-08-17T16:35:55.442608",
+  "training_date": "2026-08-19T10:19:00.964151",
   "dataset_records": 15000,
   "feature_count": 23,
   "models": {
@@ -10,7 +10,7 @@
       "algorithm": "XGBoost",
       "version": "v1.0",
       "filename": "xgboost_model.joblib",
-      "training_date": "2026-08-17T16:35:55.442608",
+      "training_date": "2026-08-19T10:19:00.964151",
       "metrics": {
         "roc_auc": 0.7867,
         "pr_auc": 0.9055,
@@ -35,7 +35,7 @@
       "algorithm": "LightGBM",
       "version": "v1.0",
       "filename": "lightgbm_model.joblib",
-      "training_date": "2026-08-17T16:35:55.442608",
+      "training_date": "2026-08-19T10:19:00.964151",
       "metrics": {
         "roc_auc": 0.7934,
         "pr_auc": 0.9088,
@@ -60,7 +60,7 @@
       "algorithm": "Random Forest",
       "version": "v1.0",
       "filename": "random_forest_model.joblib",
-      "training_date": "2026-08-17T16:35:55.442608",
+      "training_date": "2026-08-19T10:19:00.964151",
       "metrics": {
         "roc_auc": 0.7929,
         "pr_auc": 0.9101,

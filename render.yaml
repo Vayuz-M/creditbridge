@@ -1,0 +1,29 @@
+# Render Infrastructure as Code (Blueprint)
+# https://render.com/docs/blueprint-spec
+version: "1"
+
+services:
+  # ==========================================
+  # CreditBridge FastAPI & ML Web Service
+  # ==========================================
+  - type: web
+    name: creditbridge-backend
+    runtime: docker
+    dockerfilePath: backend/Dockerfile
+    dockerContext: backend
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///data/creditbridge.db
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: ENABLE_DOCS
+        value: "true"
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "10080"
